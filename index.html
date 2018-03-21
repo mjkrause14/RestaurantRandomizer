@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <link rel="stylesheet" type="text/css" href="css/bootstrap.css">
+    <link rel="stylesheet" type="text/css" href="css/style.css">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta charset="utf-8">
+    <title>Place searches</title>
+  </head>
+  <body>
+    <div class="container">
+      <h1 class="text-center">Restaurant Randomizer</h1>
+    </div>
+    <div class="container">
+      <div id="map"></div>
+      <select id="type" class="form-control">
+        <option value="restaurant">Restaurant</option>
+        <option value="bar">Bar</option>
+        <option value="cafe">Cafe</option>
+        <option value="meal_delivery">Meal Delivery</option>
+        <option value="meal_takeaway">Meal TakeOut</option>
+      </select>
+      <button class="btn btn-primary btn-lg btn-block" onclick="searchArea()">Search This Area</button>
+    </div>
+    <div id="selectPopup" class="popup">
+    <div class="popup-content">
+      <div class="popup-header">
+        <div class="container">
+          <h2>Your Selection:</h2>
+        </div>
+      </div>
+      <div class="popup-body">
+        <div class="container">
+          <table id="popupTable" class="table table-striped">
+          </table>
+        </div>
+      </div>
+      <div class="popup-footer">
+        <div class="container">
+          <button class="btn btn-primary btn-lg" onClick="confirmSelect();">Confirm</button>
+          <button class="btn btn-default btn-lg" onClick="cancelSelect();">Nope</button>
+        </div>
+      </div>
+      </div>
+    </div>
+    <div id="resultList" class="container"></div>
+    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBXvmFcHJmVRP1tRG5X-wP7G0TmwPT8R-U&libraries=places&callback=initMap" async defer></script>
+    <script src="js/script.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <script src="js/bootstrap.js"></script>
+  </body>
+</html>
