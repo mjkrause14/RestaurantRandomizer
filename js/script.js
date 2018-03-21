@@ -151,18 +151,27 @@
         $(btn).attr("data-toggle","modal");
         $(btn).attr("data-target","#myModal");
         btn.addEventListener('click', function() {
+          clearPopTable();
           randomSelect(numRows);
         });
         btn.appendChild(document.createTextNode("Select From This List"));
         div.appendChild(btn);
       }
-      
+    
+
       function getPlacePhoto(place) {
         var photos = place.photos;
         if(!photos) {
           return "http://maps.gstatic.com/mapfiles/place_api/icons/restaurant-71.png";
         }
         return photos[0].getUrl({'maxWidth': 50, 'maxHeight': 50});
+      }
+
+      function clearPopTable() {
+        if(document.getElementById('popupTable')) {
+          var table = document.getElementById('popupTable');
+          table.remove();
+        }
       }
 
       function tablePhoto(img, place) {
@@ -203,7 +212,9 @@
       $(function() {
         $('#btnConfirm').on('click', function() {
           var cell = document.getElementById('popupTable').rows[0].cells[1].innerHTML;
+          unhighlightRow();
           highlightRow(cell);
+          alterButton();
           $('#myModal').modal('hide');
         });
       });
@@ -219,16 +230,33 @@
         }
       }
 
+      function unhighlightRow() {
+        var table = document.getElementById('restaurantList');
+        var rows = table.getElementsByTagName('tr');
+        for(i = 0; i < rows.length; i++) {
+          rows[i].classList.remove('info');
+        }
+      }
 
       function getPopupDetails(details) {
-        var div = document.getElementById('popupTable');
-        var tableBody = document.createElement('tbody');
+            var div = document.getElementById('modalBody');
+            var table = document.createElement('table');
+            table.id = "popupTable";
+            table.className = "table table-striped";
+            var tableBody = document.createElement('tbody');
+          
+            table.appendChild(tableBody);
+          
+            for(i in restaurants) {
+              if(restaurants[i].name == details[1] ){
+                var tr = createTR(restaurants[i]);
+                tableBody.appendChild(tr);
+                div.appendChild(table);
+              }
+            }
+      }
 
-        for(i in restaurants) {
-          if(restaurants[i].name == details[1] ){
-            var tr = createTR(restaurants[i]);
-            tableBody.appendChild(tr);
-            div.appendChild(tableBody);
-          }
-        }
+      function alterButton() {
+        var btn = document.getElementById('selectButton');
+        btn.innerText = "Reselect From This List";
       }
