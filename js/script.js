@@ -112,6 +112,7 @@
         }
         div.appendChild(table);
         createButton(div, numRows)
+        scrollToTable();
       }
 
       function createTR(place) {
@@ -134,7 +135,6 @@
       }
 
       function clearList() {
-        
         if(document.getElementById('restaurantList')) {
           var table = document.getElementById('restaurantList');
           var btn = document.getElementById('selectButton');
@@ -148,9 +148,10 @@
         var btn = document.createElement('button');
         btn.id = "selectButton";
         btn.className = "btn btn-success btn-lg btn-block";
+        $(btn).attr("data-toggle","modal");
+        $(btn).attr("data-target","#myModal");
         btn.addEventListener('click', function() {
           randomSelect(numRows);
-          openPopup();
         });
         btn.appendChild(document.createTextNode("Select From This List"));
         div.appendChild(btn);
@@ -170,6 +171,13 @@
         img.src = getPlacePhoto(place);
         img.width = "50";
         img.height = "50";
+      }
+
+      function scrollToTable() {
+        $('html, body').animate({
+          scrollTop: $("#restaurantList").offset().top
+        }, 2000);
+
       }
 
       function randomSelect(numRestaurants) {
@@ -192,22 +200,13 @@
         getPopupDetails(selectedDetails);
       }
 
-      function openPopup() {
-        var modal = document.getElementById('selectPopup');
-        modal.style.display = "block";
-      }
-
-      function confirmSelect() {
-        var cell = document.getElementById('popupTable').rows[0].cells[1].innerHTML;
-        var modal = document.getElementById('selectPopup');
-        modal.style.display = "none";
-        highlightRow(cell);
-      }
-
-      function cancelSelect() {
-        var modal = document.getElementById('selectPopup');
-        modal.style.display = "none";
-      }
+      $(function() {
+        $('#btnConfirm').on('click', function() {
+          var cell = document.getElementById('popupTable').rows[0].cells[1].innerHTML;
+          highlightRow(cell);
+          $('#myModal').modal('hide');
+        });
+      });
 
       function highlightRow(cell) {
         var table = document.getElementById('restaurantList');
