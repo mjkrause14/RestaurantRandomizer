@@ -1,10 +1,17 @@
     var map;
+    var searchBox;
     var infowindow;
     var latitude;
     var longitude;
     var center;
     var markers = Array();
     var restaurants = Array();
+    var textRestaurants = Array();
+
+    $(function() {
+      $('#mapLink').click();
+      $('#createList').hide();
+    });
 
       function initMap() {
         var position = {lat: -33.867, lng: 151.195};
@@ -18,15 +25,42 @@
         navigator.geolocation.getCurrentPosition(locationFound, locationNotFound);
       }
 
+      function initSearchBox() {
+        var input = document.getElementById('restSelect');
+        searchBox = new google.maps.places.SearchBox(input);
+      }
+
       function searchArea() {
-        var type = document.getElementById('type').value;
         var service = new google.maps.places.PlacesService(map);
         service.nearbySearch({
           location: getCenter(),
-          radius: 1000,
-          type: [type]
+          radius: 5000,
+          type: 'restaurant'
         }, callback);
       }
+      
+      $('#mapLink').on('click', function() {
+        $('#creatList').hide();
+        $('#mapSearch').show();
+      });
+
+      $('#createLink').on('click', function() {
+        $('#mapSearch').hide();
+        initSearchBox();
+        $('#createList').show();
+      });
+
+      $(function() {
+        $('#createBtn').on('click', function() {
+        var place = document.getElementById('restSelect').value;
+        var service = new google.maps.places.PlacesService(map);
+        service.textSearch({
+          location: getCenter(),
+          radius: 5000,
+          query: place
+        }, textCallBack);
+      });
+    });
 
       function locationFound(position) {
           var location = new google.maps.LatLng(position.coords.latitude, position.coords.longitude);
@@ -70,8 +104,15 @@
         }
       }
 
+      function textCallBack(results, status) {
+        if(status === google.maps.places.PlacesServiceStatus.OK) {
+            clearMarkers();
+            createTextMarker(results);
+            addToList(place);
+        }
+      }
+
       function createMarker(place) {
-        var placeLoc = place.geometry.location;
         var marker = new google.maps.Marker({
           map: map,
           position: place.geometry.location
@@ -85,6 +126,58 @@
         });
       }
 
+      function createTextMarker(place) {
+        var marker = new google.maps.Marker({
+          map: map,
+          place: {
+            placeId: place.place_id,
+            location: place.geometry.location
+          }
+        });
+
+        markers.push(marker);
+
+        google.maps.event.addListener(marker, 'click', function() {
+          infowindow.setContent(place.name);
+          infowindow.open(map, this);
+        });
+      }
+
+      function addToList(place) {
+        var numRows = textRestaurants.length;
+        var tr;
+        var tableBody;
+        if(document.getElementById('restaurantList')) {
+          tableBody = document.getElementById('restaurantBody');
+          tr = createTR(place);
+          tableBody.appendChild(tr);
+          textRestaurants.push(place);
+        }
+        else {
+          var form = document.getElementById('textSearch');
+          var div = document.getElementById('resultList');
+          var table = document.createElement('table');
+          table.id = 'restaurantList';
+          table.className = 'table table-striped';
+          var tableBody = document.createElement('tbody');
+          tableBody.id = "restaurantBody";
+          tr = createTR(place);
+          tableBody.appendChild(tr);
+          textRestaurants.push(place);
+          div.appendChild(table);
+          var btn = document.createElement('button');
+          btn.id = 'textSearchBtn';
+          btn.class = 'btn btn-primary btn-lg btn-block';
+          form.appendChild(btn);
+        }
+        clearTextBox();
+      }
+
+      function clearTextBox() {
+        tb = document.getElementById('restSelect');
+        tb.clear();
+      }
+      
       function clearMarkers() {
         if(markers) {
           for(marker in markers) {
