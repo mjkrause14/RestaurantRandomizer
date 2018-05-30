@@ -8,11 +8,6 @@
     var restaurants = Array();
     var textRestaurants = Array();
 
-    $(function() {
-      $('#mapLink').click();
-      $('#createList').hide();
-    });
-
       function initMap() {
         var position = {lat: -33.867, lng: 151.195};
 
@@ -25,11 +20,6 @@
         navigator.geolocation.getCurrentPosition(locationFound, locationNotFound);
       }
 
-      function initSearchBox() {
-        var input = document.getElementById('restSelect');
-        searchBox = new google.maps.places.SearchBox(input);
-      }
-
       function searchArea() {
         var service = new google.maps.places.PlacesService(map);
         service.nearbySearch({
@@ -38,17 +28,6 @@
           type: 'restaurant'
         }, callback);
       }
-      
-      $('#mapLink').on('click', function() {
-        $('#creatList').hide();
-        $('#mapSearch').show();
-      });
-
-      $('#createLink').on('click', function() {
-        $('#mapSearch').hide();
-        initSearchBox();
-        $('#createList').show();
-      });
 
       $(function() {
         $('#createBtn').on('click', function() {
