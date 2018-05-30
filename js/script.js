@@ -49,7 +49,7 @@
               position: location,
               map: map,
               draggable: true,
-              icon: 'http://maps.google.com/mapfiles/ms/icons/blue-dot.png'
+              icon: 'https://maps.google.com/mapfiles/ms/icons/blue-dot.png'
           });
 
             setCenter(position.coords.latitude, position.coords.longitude);
@@ -234,7 +234,7 @@
       function getPlacePhoto(place) {
         var photos = place.photos;
         if(!photos) {
-          return "http://maps.gstatic.com/mapfiles/place_api/icons/restaurant-71.png";
+          return "https://maps.gstatic.com/mapfiles/place_api/icons/restaurant-71.png";
         }
         return photos[0].getUrl({'maxWidth': 50, 'maxHeight': 50});
       }
